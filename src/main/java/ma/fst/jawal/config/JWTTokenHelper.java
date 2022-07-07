@@ -1,19 +1,15 @@
 package ma.fst.jawal.config;
 
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 
 @Component
@@ -27,12 +23,11 @@ public class JWTTokenHelper {
 	
 	@Value("${jwt.auth.expires_in}")
     private int expiresIn;
-	
-	private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
+
+	private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
 
-	
-	private Claims getAllClaimsFromToken(String token) {
+	 private Claims getAllClaimsFromToken(String token) {
         Claims claims;
         try {
             claims = Jwts.parser()
@@ -45,7 +40,6 @@ public class JWTTokenHelper {
         return claims;
     }
 
-	
 	 public String getUsernameFromToken(String token) {
 	        String username;
 	        try {
@@ -57,7 +51,7 @@ public class JWTTokenHelper {
 	        return username;
 	 }
 	 
-	 public String generateToken(String username) throws InvalidKeySpecException, NoSuchAlgorithmException {
+	 public String generateToken(String username) {
 	        
 	        return Jwts.builder()
 	                .setIssuer( appName )
@@ -86,7 +80,6 @@ public class JWTTokenHelper {
 		return expireDate.before(new Date());
 	}
 
-
 	private Date getExpirationDate(String token) {
 		 Date expireDate;
 	        try {
@@ -97,7 +90,6 @@ public class JWTTokenHelper {
 	        }
 	        return expireDate;
 	}
-
 
 	public Date getIssuedAtDateFromToken(String token) {
 	        Date issueAt;

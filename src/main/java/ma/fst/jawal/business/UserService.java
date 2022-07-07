@@ -1,8 +1,8 @@
 package ma.fst.jawal.business;
 
 import ma.fst.jawal.entities.User;
-import ma.fst.jawal.repositories.UserRepository;
 import ma.fst.jawal.services.AccountImp;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,12 +12,9 @@ import java.util.List;
 @RequestMapping(value = {"api/userservice"})
 @CrossOrigin
 public class UserService {
+	private final AccountImp accountService;
 
-    private UserRepository iUserRepository;
-	private AccountImp accountService;
-
-    public UserService(UserRepository iUserRepository, AccountImp accountService) {
-        this.iUserRepository = iUserRepository;
+    public UserService(AccountImp accountService) {
         this.accountService = accountService;
     }
     @GetMapping(path = "/users/{login}")
@@ -25,9 +22,11 @@ public class UserService {
         return accountService.loadUserByUsername(login);
     }
     @GetMapping(path = "/users")
+    @PostAuthorize("hasAuthority('RESPONSABLE')")
     public List<User> getUsers() {
         return accountService.listUser();
     }
+
 //	@GetMapping("/fournisseurs")
 //	public List<FournisseurResponses> fournisseurs() {
 //		List<FournisseurResponses> fs = new ArrayList<>();
