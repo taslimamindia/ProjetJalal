@@ -14,7 +14,6 @@ import java.util.Date;
 
 @Component
 public class JWTTokenHelper {
-
 	@Value("${jwt.auth.app}")
 	private String appName;
 	
