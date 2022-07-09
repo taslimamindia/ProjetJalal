@@ -2,7 +2,7 @@ package ma.fst.jawal.config;
 
 import ma.fst.jawal.entities.Authority;
 import ma.fst.jawal.entities.User;
-import ma.fst.jawal.services.AccountImp;
+import ma.fst.jawal.services.accounts.AccountImp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

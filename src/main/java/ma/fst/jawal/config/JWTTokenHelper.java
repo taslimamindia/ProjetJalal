@@ -62,7 +62,7 @@ public class JWTTokenHelper {
 	  }
 	 
 	 private Date generateExpirationDate() {
-		 return new Date(new Date().getTime() + expiresIn * 1000);
+		 return new Date(new Date().getTime() + expiresIn * 1000L);
 	 }
 	 
 	 public Boolean validateToken(String token, UserDetails userDetails) {
@@ -90,17 +90,6 @@ public class JWTTokenHelper {
 	        return expireDate;
 	}
 
-	public Date getIssuedAtDateFromToken(String token) {
-	        Date issueAt;
-	        try {
-	            final Claims claims = this.getAllClaimsFromToken(token);
-	            issueAt = claims.getIssuedAt();
-	        } catch (Exception e) {
-	            issueAt = null;
-	        }
-	        return issueAt;
-	  }
-	
 	public String getToken( HttpServletRequest request ) {
       
         String authHeader = getAuthHeaderFromHeader( request );

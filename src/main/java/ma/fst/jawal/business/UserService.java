@@ -1,18 +1,23 @@
 package ma.fst.jawal.business;
 
 import ma.fst.jawal.entities.User;
-import ma.fst.jawal.services.AccountImp;
+import ma.fst.jawal.repositories.UserRepository;
+import ma.fst.jawal.responses.UserInfo;
+import ma.fst.jawal.services.accounts.AccountImp;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 
 @RestController
 @RequestMapping(value = {"api/userservice"})
-@CrossOrigin
+@CrossOrigin // a oublie pour l'instant
 public class UserService {
 	private final AccountImp accountService;
+    private UserRepository userRepository;
 
     public UserService(AccountImp accountService) {
         this.accountService = accountService;
@@ -21,6 +26,7 @@ public class UserService {
     public User getUser(@PathVariable String login) {
         return accountService.loadUserByUsername(login);
     }
+
     @GetMapping(path = "/users")
     @PostAuthorize("hasAuthority('RESPONSABLE')")
     public List<User> getUsers() {
@@ -34,18 +40,16 @@ public class UserService {
 //		return fs;
 //	}
 	
-//	@GetMapping("/userInfo")
-//	public ResponseEntity<?> getUserInfo(Principal user){
-//		User userObj=(User) userDetailsService.loadUserByUsername(user.getName());
-//
-//		UserInfo userInfo=new UserInfo();
-//		userInfo.setFirstName(userObj.getNom());
-//		userInfo.setLastName(userObj.getPrenom());
-//		userInfo.setUserName(userObj.getLogin());
-//		userInfo.setRoles(userObj.getAuthorities().toArray());
-//
-//		return ResponseEntity.ok(userInfo);
-//	}
+	@GetMapping("/userInfo")
+	public ResponseEntity<?> getUserInfo(Principal user){
+		User userObj = accountService.loadUserByUsername(user.getName());
+		UserInfo userInfo=new UserInfo();
+		userInfo.setFirstName(userObj.getNom());
+		userInfo.setLastName(userObj.getPrenom());
+		userInfo.setUserName(userObj.getLogin());
+		userInfo.setRoles(userObj.getAuthorities().toArray());
+		return ResponseEntity.ok(userInfo);
+	}
 	
 //	@RequestMapping(path = "/editPwd", method = RequestMethod.POST)
 //	public Boolean editPsswd(@RequestBody ChangePasswordRequest loggedUser) {

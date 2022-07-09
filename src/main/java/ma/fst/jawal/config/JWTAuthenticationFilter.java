@@ -1,7 +1,7 @@
 package ma.fst.jawal.config;
 
 import ma.fst.jawal.entities.Authority;
-import ma.fst.jawal.services.AccountImp;
+import ma.fst.jawal.services.accounts.AccountImp;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

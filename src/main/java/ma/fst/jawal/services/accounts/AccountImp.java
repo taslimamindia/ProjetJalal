@@ -1,4 +1,4 @@
-package ma.fst.jawal.services;
+package ma.fst.jawal.services.accounts;
 
 import ma.fst.jawal.entities.Authority;
 import ma.fst.jawal.entities.User;
@@ -12,8 +12,8 @@ import java.util.List;
 @Service
 @Transactional
 public class AccountImp implements Account{
-    private UserRepository userRepository;
-    private AuthorityRepository authorityRepository;
+    private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
 
     public AccountImp(UserRepository userRepository, AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;

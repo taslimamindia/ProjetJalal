@@ -1,26 +1,28 @@
 package ma.fst.jawal.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.hibernate.Hibernate;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.Objects;
 
 @Entity
-@Data @AllArgsConstructor @NoArgsConstructor
-public class User {
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor @NoArgsConstructor
+public class User implements Serializable {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(length = 150)
+	@Id @Column(length = 150)
 	private String login;
 	private String nom;
 	private String prenom;
@@ -30,6 +32,7 @@ public class User {
 	private Date update_at;
 	private Boolean active;
 	private String ressetPasswordToken;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Authority> authorities = new ArrayList<>();
 
@@ -45,4 +48,16 @@ public class User {
 //	@OneToMany(mappedBy = "personnel",fetch = FetchType.LAZY)
 //	private List<Panne> pannes;
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+		User user = (User) o;
+		return login != null && Objects.equals(login, user.login);
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
+	}
 }
