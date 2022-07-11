@@ -64,13 +64,20 @@ public class StockService {
 
     // ***************************** Treating of Categories *********************************
     @PostMapping(path = "/category")
-    public Category postCategory(@RequestBody Category category) {
+    public Category addCategory(@RequestBody Category category) {
         categoryServiceImp.add(category);
         Category categoryResponse = categoryServiceImp.loadCategoryByIntitule(category.getIntitule());
         if(categoryResponse.getArticles() == null) {
             categoryResponse.setArticles(new ArrayList<>());
             return categoryResponse;
         }
+        return categoryResponse;
+    }
+
+    @PutMapping(path = "/category")
+    public Category updateCategory(@RequestBody Category category) {
+        categoryServiceImp.update(category);
+        Category categoryResponse = categoryServiceImp.loadCategoryByIntitule(category.getIntitule());
         return categoryResponse;
     }
 
