@@ -73,4 +73,18 @@ public class ArticleServiceImp implements ArticleService{
     public List<Article> loadArticleAll() {
         return articleRepository.findAll();
     }
+
+    @Override
+    public List<Article> loadByCategory(Long categoryId) {
+        return articleRepository.findByCategory(categoryId);
+    }
+
+    @Override
+    public void ejectToCategory(Long id) {
+        List<Article> articles = this.loadByCategory(id);
+        for(Article article : articles) {
+            article.setCategorie(null);
+            this.update(article);
+        }
+    }
 }

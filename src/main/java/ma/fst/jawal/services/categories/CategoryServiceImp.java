@@ -51,7 +51,7 @@ public class CategoryServiceImp implements CategoryService{
     }
 
     @Override
-    public void delete(String intitule) {
+    public void deleteByIntitule(String intitule) {
         if(categoryRepository.findByIntitule(intitule) != null) {
             Category category = categoryRepository.findByIntitule(intitule);
             categoryRepository.delete(category);

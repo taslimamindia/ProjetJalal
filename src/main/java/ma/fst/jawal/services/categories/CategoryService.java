@@ -9,7 +9,7 @@ interface CategoryService {
     void addArticleToCategory(Long category_id, Long article_id);
     void update(Category category);
     void delete(Long id);
-    void delete(String intitule);
+    void deleteByIntitule(String intitule);
     Category loadCategoryByIntitule(String intitule);
     Category loadCategoryById(Long id);
     List<Category> loadCategoryAll();

@@ -7,7 +7,6 @@ import ma.fst.jawal.services.articles.ArticleServiceImp;
 import ma.fst.jawal.services.categories.CategoryServiceImp;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,8 +14,6 @@ import java.util.List;
 @RequestMapping(value = {"api/stockservice"})
 //@CrossOrigin // a oublie pour l'instant
 public class StockService {
-//	private final AccountImp accountService;
-//    private UserRepository userRepository;
     private final ArticleServiceImp articleServiceImp;
     private final CategoryServiceImp categoryServiceImp;
 
@@ -26,62 +23,74 @@ public class StockService {
     }
 
     // ********************************** Treating of articles ***************************************
-    @GetMapping(path = "/article/{id}")
-    public Article getArticle(@PathVariable Long id) {
-        return articleServiceImp.loadArticleById(id);
-    }
 
-    @PostMapping(path = "/article")
-    public void addArticle(@RequestBody ArticleRequest articleRequest) {
+    @PostMapping(path = "/article") // Terminate
+    public Article addArticle(@RequestBody ArticleRequest articleRequest) {
         System.out.println(articleRequest);
-        if(articleRequest != null && articleRequest.getCategory() != null && articleRequest.getArticle() != null) {
-            Category category = categoryServiceImp.loadCategoryByIntitule(articleRequest.getCategory().getIntitule());
+        if(articleRequest != null && articleRequest.getArticle() != null) {
             Article article = articleRequest.getArticle();
-            if(category != null) {
-                article = articleServiceImp.add(article);
-                if(article != null) {
+            article = articleServiceImp.add(article);
+            if(article != null && articleRequest.getCategory() != null) {
+                Category category = categoryServiceImp.loadCategoryByIntitule(articleRequest.getCategory().getIntitule());
+                if(category != null) {
                     categoryServiceImp.addArticleToCategory(category.getId(), article.getId());
                 }
             }
+            return article;
         }
+        return null;
     }
 
-    @PutMapping(path = "/article")
-    public void putArticle(@RequestBody Article article) {
+    @PutMapping(path = "/article") // Terminate
+    public Article updateArticle(@RequestBody Article article) {
         articleServiceImp.update(article);
+        return articleServiceImp.loadArticleById(article.getId());
     }
 
-    @DeleteMapping(path = "/article/{id}")
+    @DeleteMapping(path = "/article/{id}") // Terminate
     public void deleteArticle(@PathVariable Long id) {
         articleServiceImp.deleteById(id);
     }
 
-    @GetMapping(path = "/articles")
+    @GetMapping(path = "/article/{id}") // Terminate
+    public Article getArticle(@PathVariable Long id) {
+        return articleServiceImp.loadArticleById(id);
+    }
+
+    @GetMapping(path = "/articles") // Terminate
 //    @PostAuthorize("hasAuthority('RESPONSABLE')")
     public List<Article> getArticles() {
         return articleServiceImp.loadArticleAll();
     }
 
+
+
+
     // ***************************** Treating of Categories *********************************
-    @PostMapping(path = "/category")
+    @PostMapping(path = "/category") // Terminate
     public Category addCategory(@RequestBody Category category) {
         categoryServiceImp.add(category);
-        Category categoryResponse = categoryServiceImp.loadCategoryByIntitule(category.getIntitule());
-        if(categoryResponse.getArticles() == null) {
-            categoryResponse.setArticles(new ArrayList<>());
-            return categoryResponse;
-        }
-        return categoryResponse;
+        return categoryServiceImp.loadCategoryByIntitule(category.getIntitule());
     }
 
-    @PutMapping(path = "/category")
+    @PutMapping(path = "/category") // Terminate
     public Category updateCategory(@RequestBody Category category) {
         categoryServiceImp.update(category);
-        Category categoryResponse = categoryServiceImp.loadCategoryByIntitule(category.getIntitule());
-        return categoryResponse;
+        return categoryServiceImp.loadCategoryByIntitule(category.getIntitule());
     }
 
-    @GetMapping(path = "/categories")
+    @DeleteMapping(path = "/category/{id}") // Terminate
+    public Category deleteCategory(@PathVariable Long id) {
+        Category category = categoryServiceImp.loadCategoryById(id);
+        if (category != null) {
+            articleServiceImp.ejectToCategory(category.getId());
+            categoryServiceImp.delete(id);
+            return category;
+        }
+        return null;
+    }
+
+    @GetMapping(path = "/categories") // Terminate
     public List<Category> getCategories() {
         return categoryServiceImp.loadCategoryAll();
     }

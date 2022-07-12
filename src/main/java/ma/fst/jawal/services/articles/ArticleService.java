@@ -14,4 +14,6 @@ public interface ArticleService {
     Article loadArticleByDescription(String description);
     Article loadArticleById(Long id);
     List<Article> loadArticleAll();
+    List<Article> loadByCategory(Long categoryId);
+    void ejectToCategory(Long id);
 }
