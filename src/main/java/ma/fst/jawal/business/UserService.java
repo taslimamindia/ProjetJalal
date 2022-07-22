@@ -1,11 +1,12 @@
 package ma.fst.jawal.business;
 
 import ma.fst.jawal.entities.User;
-import ma.fst.jawal.repositories.UserRepository;
+import ma.fst.jawal.requests.UserRequest;
 import ma.fst.jawal.responses.UserInfo;
 import ma.fst.jawal.services.accounts.AccountImp;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -17,7 +18,6 @@ import java.util.List;
 @CrossOrigin // a oublie pour l'instant
 public class UserService {
 	private final AccountImp accountService;
-    private UserRepository userRepository;
 
     public UserService(AccountImp accountService) {
         this.accountService = accountService;
@@ -39,7 +39,7 @@ public class UserService {
 // 		for(Fournisseur f: fournisseurRepository.findAll()) fs.add(new FournisseurResponses(f));
 //		return fs;
 //	}
-	
+
 	@GetMapping("/userInfo")
 	public ResponseEntity<?> getUserInfo(Principal user){
 		User userObj = accountService.loadUserByUsername(user.getName());
@@ -50,27 +50,33 @@ public class UserService {
 		userInfo.setRoles(userObj.getAuthorities().toArray());
 		return ResponseEntity.ok(userInfo);
 	}
-	
-//	@RequestMapping(path = "/editPwd", method = RequestMethod.POST)
-//	public Boolean editPsswd(@RequestBody ChangePasswordRequest loggedUser) {
-//		User user= iUserRepository.findByLogin(loggedUser.getLogin());
-//		if (user != null && checkIfValidOldPassword(user, loggedUser.getOrdPassword())) {
-//			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//			String encodedPassword = encoder.encode(loggedUser.getNewPassword());
-//			user.setPwd(encodedPassword);
-//			user.setActive(true);
-//			iUserRepository.save(user);
-//			return true;
-//		}
-//		else {
-//			return false;
-//		}
-//	}
-	
-//	@RequestMapping(path = "/editInfo", method = RequestMethod.GET)
-//	public ResponseEntity<?> editInfo(HttpServletRequest req,@AuthenticationPrincipal UserDetails loggedUser) {
-//		 return ResponseEntity.ok(iUserRepository.findByLogin(loggedUser.getUsername()));
-//	}
+
+	@PutMapping(path = "/changePassword")
+	public Boolean changePassword(@RequestBody UserRequest userRequest, Principal user) {
+        User u = accountService.loadUserByUsername(user.getName());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if(u != null && passwordEncoder.matches(userRequest.getPassword(), u.getPwd())) {
+            u.setPwd(passwordEncoder.encode(userRequest.getNewPassword()));
+            accountService.updateUser(u);
+            return true;
+        }
+        return false;
+	}
+
+    @PutMapping(path = "/changeInfo")
+    public Boolean changeInfo(@RequestBody UserRequest userRequest, Principal user) {
+        System.out.println(userRequest);
+        User u = accountService.loadUserByUsername(user.getName());
+        if(u != null) {
+            u.setNom(userRequest.getFirstName());
+            u.setPrenom(userRequest.getLastName());
+            System.out.println(u);
+            accountService.updateUser(u);
+            return true;
+        }
+        return false;
+    }
+
 //
 //	@RequestMapping(path = "/editInfoPerso", method = RequestMethod.GET)
 //	public void editInfoPerso(User user) {

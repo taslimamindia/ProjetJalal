@@ -26,6 +26,11 @@ public class AccountImp implements Account{
     }
 
     @Override
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
     public void addRole(Authority role) {
         authorityRepository.save(role);
     }

@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = {"api/stockservice"})
-//@CrossOrigin // a oublie pour l'instant
+@CrossOrigin // a oublie pour l'instant
 public class StockService {
     private final ArticleServiceImp articleServiceImp;
     private final CategoryServiceImp categoryServiceImp;
@@ -65,8 +65,7 @@ public class StockService {
 
 
 
-
-    // ***************************** Treating of Categories *********************************
+    // ********************************** Treating of Categories *********************************
     @PostMapping(path = "/category") // Terminate
     public Category addCategory(@RequestBody Category category) {
         categoryServiceImp.add(category);

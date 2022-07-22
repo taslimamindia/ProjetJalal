@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface Account {
     void addUser(User user);
+    void updateUser(User user);
     void addRole(Authority role);
     void addRoleToUser(String login, String role);
     void revokeRoleToUser(String login, String role);
